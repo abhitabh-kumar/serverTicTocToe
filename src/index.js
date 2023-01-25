@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { StreamChat } from "stream-chat";
 import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 const app = express();
 
 app.use(cors());
@@ -20,7 +20,7 @@ app.post("/signup", async (req, res) => {
   try {
     const { firstName, lastName, userName,email, password } = req.body;
     const userId = uuidv4();
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = password;
     const token = serverClient.createToken(userId);
     res.json({ 
       token, 
@@ -43,10 +43,7 @@ app.post("/login", async (req, res) => {
     if (users.length === 0) return res.json({ message: "User not found" });
 
     const token = serverClient.createToken(users[0].id);
-    const passwordMatch = await bcrypt.compare(
-      password,
-      users[0].hashedPassword
-    );
+    const passwordMatch = password==users[0].hashedPassword;
       console.log(users);
     if (passwordMatch) {
       res.json({
